@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: decoupage-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: decoupage-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: decoupage_marketplace
+      MYSQL_USER: marketplace
+      MYSQL_PASSWORD: marketplace
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: decoupage-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: marketplace
+      PMA_PASSWORD: marketplace
+    depends_on:
+      - mysql
+    ports:
+      - "8081:80"
+
+volumes:
+  db-data:
