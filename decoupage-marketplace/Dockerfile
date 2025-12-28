@@ -8,13 +8,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libpng-dev \
         libjpeg-dev \
         libfreetype6-dev \
+        libicu-dev \
         libzip-dev \
         libonig-dev \
         curl \
         nodejs \
         npm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring gd zip \
+    && docker-php-ext-install pdo_mysql mbstring gd zip intl \
     && npm install -g npm@10 \
     && rm -rf /var/lib/apt/lists/*
 
